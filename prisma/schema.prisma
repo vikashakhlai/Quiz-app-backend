@@ -1,0 +1,62 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  email     String   @unique
+  password  String
+  friendId  String   @unique @default(cuid())
+  quizzes   Quiz[]
+  friends   String[]
+
+  @@map("user")
+}
+
+model Quiz {
+  id        Int        @id @default(autoincrement())
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+  name      String
+  status    EnumStatus
+  isPassed  Boolean    @default(false)
+
+  quiz_questions Quiz_question[]
+  User           User?           @relation(fields: [userId], references: [id])
+  userId         Int?            @map("user_id")
+
+  @@map("quiz")
+}
+
+model Quiz_question {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  image          String?
+  video          String?
+  question       String
+  answer_options String[]
+  answer         String[]
+
+  Quiz   Quiz? @relation(fields: [quizId], references: [id])
+  quizId Int?  @map("quiz_id")
+}
+
+enum EnumStatus {
+  one_day
+  three_day
+  week
+  month
+  year
+}
