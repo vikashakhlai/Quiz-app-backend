@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { UserDto, UserEmailDto, UserFriendIdDto } from './user.dto';
 
@@ -53,6 +57,11 @@ export class UserService {
     });
 
     const listFriends = user.friends;
+    listFriends.forEach((friend) => {
+      if (friend == dto.friendId) {
+        throw new InternalServerErrorException('Friend added in you friends');
+      }
+    });
     const newList = [...listFriends, dto.friendId];
 
     return this.prisma.user.update({
