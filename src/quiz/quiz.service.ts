@@ -53,6 +53,28 @@ export class QuizService {
     });
   }
 
+  async updatePassed(id: number) {
+    return await this.prisma.quiz.update({
+      where: {
+        id: +id,
+      },
+      data: {
+        isPassed: true,
+      },
+    });
+  }
+
+  async updateNoPassed(id: number) {
+    return await this.prisma.quiz.update({
+      where: {
+        id: +id,
+      },
+      data: {
+        isPassed: false,
+      },
+    });
+  }
+
   async getById(id: number) {
     return this.prisma.quiz.findFirst({
       where: {
@@ -74,20 +96,20 @@ export class QuizService {
     return quiz;
   }
 
-  async create(dto: QuizDto) {
+  async create(userId: number) {
     return this.prisma.quiz.create({
       data: {
-        name: dto.name,
-        status: dto.status,
-        userId: dto.userId,
+        name: '',
+        status: 'one_day',
+        userId: userId,
       },
     });
   }
 
-  async update(dto: QuizWithIdDto) {
+  async update(id: number, dto: QuizDto) {
     return this.prisma.quiz.update({
       where: {
-        id: dto.id,
+        id: +id,
       },
       data: {
         name: dto.name,
@@ -95,6 +117,18 @@ export class QuizService {
       },
     });
   }
+
+  // async update(dto: QuizWithIdDto) {
+  //   return this.prisma.quiz.update({
+  //     where: {
+  //       id: dto.id,
+  //     },
+  //     data: {
+  //       name: dto.name,
+  //       status: dto.status,
+  //     },
+  //   });
+  // }
 
   async setPassed(dto: QuizWithIdDto) {
     return this.prisma.quiz.update({
@@ -107,10 +141,10 @@ export class QuizService {
     });
   }
 
-  async delete(dto: QuizWithIdDto) {
+  async delete(id: number) {
     return this.prisma.quiz.delete({
       where: {
-        id: dto.id,
+        id: +id,
       },
     });
   }

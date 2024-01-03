@@ -62,31 +62,60 @@ export class QuizController {
     return this.quizService.getById(id);
   }
 
+  // @UsePipes(new ValidationPipe())
+  // @HttpCode(200)
+  // @Post()
+  // async create(@Body() dto: QuizDto) {
+  //   return this.quizService.create(dto);
+  // }
+
   @UsePipes(new ValidationPipe())
   @HttpCode(200)
+  @Auth()
   @Post()
-  async create(@Body() dto: QuizDto) {
-    return this.quizService.create(dto);
+  async create(@User('id') id: number) {
+    return this.quizService.create(id);
   }
 
   @UsePipes(new ValidationPipe())
   @HttpCode(200)
-  @Put()
-  async update(@Body() dto: QuizWithIdDto) {
-    return this.quizService.update(dto);
+  @Put('/:id')
+  async update(@Param('id') id: number, @Body() dto: QuizDto) {
+    return this.quizService.update(id, dto);
   }
+
+  @Patch('/:id')
+  @Auth()
+  @UsePipes(new ValidationPipe())
+  async updatePassed(@Param('id') id: number) {
+    return this.quizService.updatePassed(id);
+  }
+
+  @Patch('/noPassed/:id')
+  @Auth()
+  @UsePipes(new ValidationPipe())
+  async updateNoPassed(@Param('id') id: number) {
+    return this.quizService.updateNoPassed(id);
+  }
+
+  // @UsePipes(new ValidationPipe())
+  // @HttpCode(200)
+  // @Put()
+  // async update(@Body() dto: QuizWithIdDto) {
+  //   return this.quizService.update(dto);
+  // }
+
+  // @UsePipes(new ValidationPipe())
+  // @HttpCode(200)
+  // @Patch()
+  // async setPassed(@Body() dto: QuizWithIdDto) {
+  //   return this.quizService.setPassed(dto);
+  // }
 
   @UsePipes(new ValidationPipe())
   @HttpCode(200)
-  @Patch()
-  async setPassed(@Body() dto: QuizWithIdDto) {
-    return this.quizService.setPassed(dto);
-  }
-
-  @UsePipes(new ValidationPipe())
-  @HttpCode(200)
-  @Delete()
-  async delete(@Body() dto: QuizWithIdDto) {
-    return this.quizService.delete(dto);
+  @Delete('/:id')
+  async delete(@Param('id') id: number) {
+    return this.quizService.delete(id);
   }
 }

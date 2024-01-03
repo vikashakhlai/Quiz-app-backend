@@ -6,21 +6,65 @@ import { QuestionDto } from './question.dto';
 export class QuestionService {
   constructor(private prisma: PrismaService) {}
 
-  async create(userId: number, quizName: string, dto: QuestionDto) {
-    const quiz = await this.prisma.quiz.findFirst({
+  async getUserQuestions(userId: number) {
+    return await this.prisma.quiz_question.findMany({
       where: {
-        name: quizName,
-        userId: userId,
+        Quiz: {
+          userId: +userId,
+        },
       },
     });
-    return await this.prisma.quiz_question.create({
+  }
+
+  async getQuizQuestions(quizId: number) {
+    return await this.prisma.quiz_question.findMany({
+      where: {
+        quizId: +quizId,
+      },
+    });
+  }
+
+  async getById(id: number) {
+    return await this.prisma.quiz_question.findFirst({
+      where: {
+        id: +id,
+      },
+    });
+  }
+
+  async updateQuestion(questionId: number, dto: QuestionDto) {
+    return await this.prisma.quiz_question.update({
+      where: {
+        id: +questionId,
+      },
       data: {
+        image: dto?.image,
         video: dto?.video,
-        image: dto?.video,
         question: dto.question,
         answer_options: dto.answer_options,
         answer: dto.answer,
-        quizId: quiz.id,
+        quizId: +dto.quizId,
+      },
+    });
+  }
+
+  async delete(userId: number, questionId: number) {
+    return await this.prisma.quiz_question.delete({
+      where: {
+        id: +questionId,
+      },
+    });
+  }
+
+  async create(userId: number) {
+    return await this.prisma.quiz_question.create({
+      data: {
+        video: '',
+        image: '',
+        question: '',
+        answer_options: [],
+        answer: [],
+        quizId: null,
       },
     });
   }

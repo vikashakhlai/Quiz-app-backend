@@ -70,9 +70,14 @@ export class UserController {
 
   @Delete('friend')
   @Auth()
-  async deleteFriend(@User('id') id: number, @Body() dto: UserFriendIdDto) {
-    return this.userService.deleteFriend(id, dto);
+  async deleteFriend(@User('id') id: number, friendId: number) {
+    return this.userService.deleteFriend(id, friendId);
   }
+  // @Delete('friend')
+  // @Auth()
+  // async deleteFriend(@User('id') id: number, @Body() dto: UserFriendIdDto) {
+  //   return this.userService.deleteFriend(id, dto);
+  // }
 
   @Get('friends/quiz')
   @Auth()

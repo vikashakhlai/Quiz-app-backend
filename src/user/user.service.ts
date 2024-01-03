@@ -26,9 +26,14 @@ export class UserService {
   }
 
   async getFriends(userId: number) {
-    const user = await this.prisma.user.findFirst({ where: { id: +userId } });
+    const user = await this.prisma.user.findFirst({
+      where: {
+        id: userId,
+      },
+    });
     const listFriends = user.friends;
-    return await Promise.all(
+
+    const result = await Promise.all(
       listFriends.map(async (id) => {
         return await this.prisma.user.findMany({
           where: {
@@ -37,6 +42,7 @@ export class UserService {
         });
       }),
     );
+    return result[0];
   }
 
   async addFriend(userId: number, dto: UserFriendIdDto) {
@@ -59,14 +65,26 @@ export class UserService {
     });
   }
 
-  async deleteFriend(userId: number, dto: UserFriendIdDto) {
+  async deleteFriend(userId: number, friendId: number) {
     const user = await this.prisma.user.findFirst({
       where: {
         id: userId,
       },
     });
 
-    const newList = user.friends.filter((id) => id !== dto.friendId);
+    const friend = await this.prisma.user.findFirst({
+      where: {
+        id: friendId,
+      },
+    });
+    // async deleteFriend(userId: number, dto: UserFriendIdDto) {
+    //   const user = await this.prisma.user.findFirst({
+    //     where: {
+    //       id: userId,
+    //     },
+    //   });
+
+    const newList = user.friends.filter((id) => id !== friend.friendId);
 
     return this.prisma.user.update({
       where: {
@@ -118,7 +136,7 @@ export class UserService {
   }
 
   async getFriendQuiz(userId: number) {
-    const user = await this.prisma.user.findFirst({ where: { id: userId } });
+    const user = await this.prisma.user.findFirst({ where: { id: +userId } });
     const listFriends = user.friends;
     const friends = await Promise.all(
       listFriends.map(async (id) => {

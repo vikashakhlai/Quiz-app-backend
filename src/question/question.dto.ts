@@ -1,9 +1,7 @@
 import { IsArray, IsNumber, IsString } from 'class-validator';
 
 export class QuestionDto {
-  @IsString()
   image?: string;
-  @IsString()
   video?: string;
   @IsString()
   question: string;
@@ -11,6 +9,7 @@ export class QuestionDto {
   answer_options: string[];
   @IsArray()
   answer: string[];
+  quizId?: number;
 }
 
 export class QuestionWithIdDto extends QuestionDto {
