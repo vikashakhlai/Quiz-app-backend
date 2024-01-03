@@ -7,6 +7,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Auth } from 'src/auth/decorators/auth.decorators';
 import { FileService } from './file.service';
 
 @Controller('files')
@@ -15,6 +16,7 @@ export class FileController {
 
   @Post()
   @HttpCode(200)
+  @Auth()
   @UseInterceptors(FileInterceptor('file'))
   async uploadfile(
     @UploadedFile() file: Express.Multer.File,

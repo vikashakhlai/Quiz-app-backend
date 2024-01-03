@@ -28,6 +28,7 @@ export class QuestionController {
 
   @UsePipes(new ValidationPipe())
   @HttpCode(200)
+  @Auth()
   @Get(':id')
   async getById(@Param('id') id: number) {
     return this.questionService.getById(id);
@@ -35,6 +36,7 @@ export class QuestionController {
 
   @UsePipes(new ValidationPipe())
   @HttpCode(200)
+  @Auth()
   @Get('/quiz/:id')
   async getQuizQuestions(@Param('id') id: number) {
     return this.questionService.getQuizQuestions(id);

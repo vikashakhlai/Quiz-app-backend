@@ -26,6 +26,7 @@ export class QuizController {
 
   @UsePipes(new ValidationPipe())
   @HttpCode(200)
+  @Auth()
   @Get()
   async getQuizzes() {
     return this.quizService.getAll();
@@ -57,6 +58,7 @@ export class QuizController {
 
   @UsePipes(new ValidationPipe())
   @HttpCode(200)
+  @Auth()
   @Get(':id')
   async getById(@Param('id') id: number) {
     return this.quizService.getById(id);
@@ -114,6 +116,7 @@ export class QuizController {
 
   @UsePipes(new ValidationPipe())
   @HttpCode(200)
+  @Auth()
   @Delete('/:id')
   async delete(@Param('id') id: number) {
     return this.quizService.delete(id);

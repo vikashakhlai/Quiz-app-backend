@@ -18,6 +18,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
+  @Auth()
   async getUsers() {
     return this.userService.getAll();
   }
