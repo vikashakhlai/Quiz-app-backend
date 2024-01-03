@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { QuizDto, QuizWithIdDto } from './quiz.dto';
 
@@ -54,6 +58,8 @@ export class QuizService {
   }
 
   async updatePassed(id: number) {
+    const quiz = this.getById(+id);
+    if (!quiz) throw new UnauthorizedException('Quiz not found');
     return await this.prisma.quiz.update({
       where: {
         id: +id,
@@ -117,18 +123,6 @@ export class QuizService {
       },
     });
   }
-
-  // async update(dto: QuizWithIdDto) {
-  //   return this.prisma.quiz.update({
-  //     where: {
-  //       id: dto.id,
-  //     },
-  //     data: {
-  //       name: dto.name,
-  //       status: dto.status,
-  //     },
-  //   });
-  // }
 
   async setPassed(dto: QuizWithIdDto) {
     return this.prisma.quiz.update({

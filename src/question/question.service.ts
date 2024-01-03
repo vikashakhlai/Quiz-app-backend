@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { QuestionDto } from './question.dto';
 
@@ -33,6 +33,9 @@ export class QuestionService {
   }
 
   async updateQuestion(questionId: number, dto: QuestionDto) {
+    const question = this.getById(+questionId);
+    if (!question) throw new UnauthorizedException('Question not found');
+
     return await this.prisma.quiz_question.update({
       where: {
         id: +questionId,
@@ -49,6 +52,8 @@ export class QuestionService {
   }
 
   async delete(userId: number, questionId: number) {
+    const question = this.getById(+questionId);
+    if (!question) throw new UnauthorizedException('Question not found');
     return await this.prisma.quiz_question.delete({
       where: {
         id: +questionId,
