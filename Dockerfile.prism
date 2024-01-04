@@ -1,0 +1,17 @@
+# Используйте Node.js в качестве базового образа
+FROM node:20
+
+# Установите рабочую директорию внутри контейнера
+WORKDIR /app
+
+# Копируйте файлы package.json и package-lock.json
+COPY package*.json ./
+
+# Установите зависимости
+RUN yarn install
+
+# Копируйте все файлы из текущего каталога внутрь контейнера
+COPY . .
+
+# Команда для генерации Prisma Client
+CMD ["npx", "prisma", "generate","npx","prisma","db","push"]
